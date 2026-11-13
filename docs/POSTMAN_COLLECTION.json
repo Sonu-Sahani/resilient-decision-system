@@ -1,0 +1,60 @@
+{
+  "info": {
+    "name": "DecisionFlow API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "requestId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Active workflow config",
+      "request": { "method": "GET", "url": "{{baseUrl}}/config" }
+    },
+    {
+      "name": "Submit application (retry demo)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Idempotency-Key", "value": "demo-retry-001" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"applicantName\": \"Aarav Sharma\",\n  \"email\": \"aarav@example.com\",\n  \"annualIncome\": 900000,\n  \"creditScore\": 720,\n  \"requestedAmount\": 250000,\n  \"externalCheck\": { \"failuresRemaining\": 1 }\n}"
+        },
+        "url": "{{baseUrl}}/requests"
+      }
+    },
+    {
+      "name": "List requests",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/requests?page=1&limit=25"
+      }
+    },
+    {
+      "name": "Get request by id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/requests/{{requestId}}"
+      }
+    },
+    {
+      "name": "Retry request by id",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/requests/{{requestId}}/retry"
+      }
+    },
+    {
+      "name": "Metrics",
+      "request": { "method": "GET", "url": "{{baseUrl}}/metrics" }
+    }
+  ]
+}

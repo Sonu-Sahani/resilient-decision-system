@@ -1,0 +1,11 @@
+import { Router } from "express";
+import * as c from "../controllers/workflowController.js";
+const r = Router();
+r.post("/requests", c.submit);
+r.get("/requests", c.list);
+r.get("/requests/:id", c.getOne);
+r.post("/requests/:id/retry", c.retry);
+r.get("/config", c.config);
+r.put("/config", c.config);
+r.get("/metrics", c.metrics);
+export default r;

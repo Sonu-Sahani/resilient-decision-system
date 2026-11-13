@@ -1,0 +1,77 @@
+{
+  "id": "application-approval-v1",
+  "name": "Application Approval",
+  "version": 1,
+  "description": "Configurable eligibility workflow with an external verification step.",
+  "requiredFields": [
+    "applicantName",
+    "email",
+    "annualIncome",
+    "creditScore",
+    "requestedAmount"
+  ],
+  "rules": [
+    {
+      "id": "income-present",
+      "type": "required",
+      "field": "annualIncome",
+      "message": "Annual income is required."
+    },
+    {
+      "id": "credit-minimum",
+      "type": "threshold",
+      "field": "creditScore",
+      "operator": ">=",
+      "value": 600,
+      "onFail": "REJECT",
+      "message": "Credit score must be at least 600."
+    },
+    {
+      "id": "amount-limit",
+      "type": "threshold",
+      "field": "requestedAmount",
+      "operator": "<=",
+      "value": 500000,
+      "onFail": "MANUAL_REVIEW",
+      "message": "Requests above 500,000 require manual review."
+    },
+    {
+      "id": "income-ratio",
+      "type": "expression",
+      "expression": "requestedAmount <= annualIncome * 5",
+      "onFail": "MANUAL_REVIEW",
+      "message": "Requested amount is high relative to annual income."
+    }
+  ],
+  "stages": [
+    "VALIDATE",
+    "EVALUATE_RULES",
+    "EXTERNAL_VERIFICATION",
+    "FINALIZE"
+  ],
+  "inputSchema": {
+    "applicantName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 200
+    },
+    "annualIncome": {
+      "type": "number",
+      "minimum": 1
+    },
+    "creditScore": {
+      "type": "number",
+      "minimum": 300,
+      "maximum": 900
+    },
+    "requestedAmount": {
+      "type": "number",
+      "minimum": 1
+    }
+  }
+}
